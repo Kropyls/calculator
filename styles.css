@@ -1,0 +1,32 @@
+.page-wrapper, html, body {
+  margin: 0;
+}
+
+.page-wrapper {
+  padding: 0;
+  padding-top: 0;
+  text-align: center;
+  background-color: brown;
+  display: flex;
+  flex-direction: row;
+  padding: 3%;
+}
+
+.menu-wrapper{
+  flex-grow: .25;
+}
+
+.page-wrapper h2{
+  padding: 2%;
+}
+
+.calc-wapper{
+  width: 25%;
+  /* aspect-ratio: 1/1; */
+  display: flex;
+  margin: auto;
+  padding: 1%;
+  background-color: burlywood;
+  flex: 1;
+  
+}
