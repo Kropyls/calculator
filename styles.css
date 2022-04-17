@@ -9,11 +9,13 @@
   background-color: brown;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   padding: 3%;
 }
 
 .menu-wrapper{
   flex-grow: .25;
+  color: antiquewhite;
 }
 
 .page-wrapper h2{
@@ -31,10 +33,10 @@
 }
 
 #screen {
+  width: 90%;
   margin: 5%;
   margin-top: 0;
   margin-bottom: 2%;
-  width: 90%;
   padding: 3%;
   background-color: beige;
 }
@@ -55,9 +57,11 @@
 
 .num-button{
   flex: 0 0 33%;
+  background-color:lavender;
 }
 
 .func-button{
   flex: 1 1 50%;
   padding: 3%;
+  background-color: aquamarine;
 }
