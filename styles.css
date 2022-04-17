@@ -21,12 +21,43 @@
 }
 
 .calc-wapper{
-  width: 25%;
-  /* aspect-ratio: 1/1; */
   display: flex;
-  margin: auto;
-  padding: 1%;
-  background-color: burlywood;
+  justify-content: center;
+  padding: 3%;
+  background-color:dimgray;
   flex: 1;
-  
+  border: black solid 2px;
+  flex-wrap: wrap;
+}
+
+#screen {
+  margin: 5%;
+  margin-top: 0;
+  margin-bottom: 2%;
+  width: 90%;
+  padding: 3%;
+  background-color: beige;
+}
+
+.num-wrapper{
+  flex: 2;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.func-wrapper{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.num-button{
+  flex: 0 0 33%;
+}
+
+.func-button{
+  flex: 1 1 50%;
+  padding: 3%;
 }
