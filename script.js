@@ -2,18 +2,28 @@
 const screen = document.getElementById('screen');
 const numButtons = document.getElementsByClassName("num-button")
 const funcButtons = document.getElementsByClassName("func-button")
+let equalBtn = funcButtons;
 
 //creates operator variable to track the last operator button pushed
-let operator = NaN;
+let operator = undefined;
 let workingNum = "";
-let lastNum;
+let lastNum = NaN;
 
 let add = (num1,num2) => num1+num2;
 let sub = (num1,num2) => num1-num2;
 let mul = (num1,num2) => num1*num2;
 let div = (num1,num2) => num1/num2;
 
-//function is falled when a number button is pushed -
+function shouldEqualBeEnabled(){
+  if (!isNaN(lastNum) && operator != undefined && workingNum != "")
+  {
+    equalBtn.disabled = false;
+    return
+  }
+  equalBtn.disabled = true;
+}
+
+//function is called when a number button is pushed -
 //it writes the number to the screen and updates the working number variable
 function addNumToScreen(num) {
   screen.textContent = screen.textContent + num;
@@ -38,18 +48,34 @@ function operate(num1,num2,opr){
 //should be independant of button order
 Array.from(numButtons).forEach(btn => {
   btn.addEventListener('click', function(){
+    //this if statement basically checks if workingNum is not a string because that implies it was the result of another operation, and should be immutable - if number is entered it will clear the old value - we know this because of my lines that set workingNum = lastNum when we operate -- lastNum will always be a number and not a string
+    if(typeof workingNum != 'string'){
+      workingNum = "";
+      screen.textContent = "";
+    }
     addNumToScreen(btn.textContent)
+    shouldEqualBeEnabled();
   })
 })
 
-//function to track the latest operator button pushed by setting the operater variable
+//function to track the latest operator button pushed - sets the global operater variable
 //should be read into specific operator buttons in the code directly beneath it
 function addOperateListenToBtn(btn, op){
   btn.addEventListener('click', function(){
+    //if clicking operator buttons in sequence, ie without pressing =, evaluate on each press
+    if(operator != undefined){
+      lastNum = operate(lastNum, parseInt(workingNum), operator);
+      screen.textContent = lastNum;
+      operator = op;
+      workingNum = lastNum;
+      equalBtn.disabled = true;
+      return
+    }
     lastNum = parseInt(workingNum);
     workingNum = "";
     screen.textContent = "";
     operator = op;
+    shouldEqualBeEnabled();
   })
 }
 
@@ -72,18 +98,24 @@ Array.from(funcButtons).forEach(btn => {
     //the "=" will be different because it calls the operator to operate on the inputs, as opposed to
     //writing the operator and value numbers to be operated on later
     case "=":
+      equalBtn = btn;
       btn.addEventListener('click', function(){
         lastNum = operate(lastNum, parseInt(workingNum), operator);
         screen.textContent = lastNum;
-        operator = NaN;
+        operator = undefined;
+        workingNum = lastNum;
+        shouldEqualBeEnabled();
       })
+      shouldEqualBeEnabled();
       break;
+    //AC is also different than a basic operation for obvious reasons
     case "AC":
       btn.addEventListener('click', function(){
-        operator = NaN;
+        operator = undefined;
         workingNum = "";
-        lastNum = undefined;
+        lastNum = NaN;
         screen.textContent = "";
+        shouldEqualBeEnabled();
       })
       break;
   }
