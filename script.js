@@ -2,7 +2,7 @@
 const screen = document.getElementById('screen');
 const numButtons = document.getElementsByClassName("num-button")
 const funcButtons = document.getElementsByClassName("func-button")
-let equalBtn = funcButtons;
+let equalBtn;
 
 //creates operator variable to track the last operator button pushed
 let operator = undefined;
@@ -62,12 +62,13 @@ Array.from(numButtons).forEach(btn => {
 //should be read into specific operator buttons in the code directly beneath it
 function addOperateListenToBtn(btn, op){
   btn.addEventListener('click', function(){
-    //if clicking operator buttons in sequence, ie without pressing =, evaluate on each press
+    //if statement for clicking operator buttons in sequence, ie without pressing =, evaluate on each press
     if(operator != undefined){
       lastNum = operate(lastNum, parseInt(workingNum), operator);
       screen.textContent = lastNum;
       operator = op;
       workingNum = lastNum;
+      //equals needs to be set to diabled here because the user will have just touched an operation key, so they shouldn't be able to hit equals until they specify enter a second value to do the operation with - this is the only case where shouldEqualBeEnabled won't work - because the workingNum variable is set to the result of the last operation (because that result should be displayed on screen) AND an operator key was set for this function to be called
       equalBtn.disabled = true;
       return
     }
