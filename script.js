@@ -62,6 +62,7 @@ Array.from(numButtons).forEach(btn => {
 //should be read into specific operator buttons in the code directly beneath it
 function addOperateListenToBtn(btn, op){
   btn.addEventListener('click', function(){
+    if(workingNum == "") return;
     //if statement for clicking operator buttons in sequence, ie without pressing =, evaluate on each press
     if(operator != undefined){
       lastNum = operate(lastNum, parseInt(workingNum), operator);
