@@ -13,7 +13,9 @@ let add = (num1,num2) => num1+num2;
 let sub = (num1,num2) => num1-num2;
 let mul = (num1,num2) => num1*num2;
 let div = (num1,num2) => num1/num2;
+let pow = (num1,num2) => num1**num2;
 
+//function to check if equal button should be enabled or not
 function shouldEqualBeEnabled(){
   if (!isNaN(lastNum) && operator != undefined && workingNum != "")
   {
@@ -21,6 +23,21 @@ function shouldEqualBeEnabled(){
     return
   }
   equalBtn.disabled = true;
+}
+
+function disableAllButAC(){
+  Array.from(funcButtons).forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent == "AC")
+      btn.disabled = false;
+  })
+  flipAllBtns(numButtons, true)
+}
+
+function flipAllBtns(btnNodeList, disabled){
+  Array.from(btnNodeList).forEach(btn => {
+    btn.disabled = disabled;
+  })
 }
 
 //function is called when a number button is pushed -
@@ -40,7 +57,12 @@ function operate(num1,num2,opr){
     case "x":
       return mul(num1,num2);
     case "/":
-      return div(num1,num2)
+      if(num2 == 0){
+        disableAllButAC();
+        return "Can't Divide by 0!";}
+      return div(num1,num2);
+    case "^":
+      return pow(num1,num2)
   }
 }
 
@@ -48,7 +70,7 @@ function operate(num1,num2,opr){
 //should be independant of button order
 Array.from(numButtons).forEach(btn => {
   btn.addEventListener('click', function(){
-    //this if statement basically checks if workingNum is not a string because that implies it was the result of another operation, and should be immutable - if number is entered it will clear the old value - we know this because of my lines that set workingNum = lastNum when we operate -- lastNum will always be a number and not a string
+    //this if statement basically checks if workingNum is not a string because that implies it was the result of another operation, and should be 'immutable' - if number is entered it will clear the old value - we know this because of my lines that set workingNum = lastNum when we operate -- lastNum will always be a number and not a string
     if(typeof workingNum != 'string'){
       workingNum = "";
       screen.textContent = "";
@@ -62,7 +84,7 @@ Array.from(numButtons).forEach(btn => {
 //should be read into specific operator buttons in the code directly beneath it
 function addOperateListenToBtn(btn, op){
   btn.addEventListener('click', function(){
-    if(workingNum == "") return;
+    if(workingNum == "") {return;}
     //if statement for clicking operator buttons in sequence, ie without pressing =, evaluate on each press
     if(operator != undefined){
       lastNum = operate(lastNum, parseInt(workingNum), operator);
@@ -97,6 +119,37 @@ Array.from(funcButtons).forEach(btn => {
     case "/":
       addOperateListenToBtn(btn, "/")
       break;
+    case "^":
+      addOperateListenToBtn(btn, "^")
+      break;
+    //what follows are special functions that dont fit the operations above
+    //it might be possible to fit them in with a little work but having them separate makes it clear these are special in some way
+    case "!":
+      btn.addEventListener('click', function(){
+        if(workingNum == "") {return;}
+        //if statement for user clicking operator buttons in sequence, ie without pressing =, evaluate last operation before factorializing
+        if(operator != undefined){
+        lastNum = operate(lastNum, parseInt(workingNum), operator);
+        screen.textContent = lastNum;
+        operator = undefined;
+        workingNum = lastNum;
+        }
+        let iLast=parseInt(workingNum);
+        if (iLast <= 0){
+          screen.textContent = "ERROR - Can't factorial below 1"
+          disableAllButAC();
+          return;
+        }
+        for(i=(iLast-1);i>0;i--){
+          iLast = iLast * i;
+        }
+        lastNum = iLast;
+        screen.textContent = lastNum;
+        operator = undefined;
+        workingNum = lastNum;
+        shouldEqualBeEnabled();
+      })
+      break;
     //the "=" will be different because it calls the operator to operate on the inputs, as opposed to
     //writing the operator and value numbers to be operated on later
     case "=":
@@ -117,6 +170,8 @@ Array.from(funcButtons).forEach(btn => {
         workingNum = "";
         lastNum = NaN;
         screen.textContent = "";
+        flipAllBtns(funcButtons, false);
+        flipAllBtns(numButtons, false);
         shouldEqualBeEnabled();
       })
       break;
